@@ -7,23 +7,30 @@
 if command -v git &>/dev/null; then
     echo "git installed"
 else
-    apt install -y git
+    sudo apt install -y git
 fi
 
 if command -v nvim &>/dev/null; then
     echo "neovim installed"
 else
-    apt install -y neovim
+    sudo apt install -y neovim
 fi
 
 if command -v vim &>/dev/null; then
     echo "vim installed"
 else
-    apt install -y vim 
+    sudo apt install -y vim 
 fi
 
-apt install -y tmux
-apt install -y alacritty
+sudo apt install -y tmux
+sudo apt install -y alacritty
 
 # Install VSCode
 sudo snap install code --classic
+
+# Install Ghostty
+sudo snap install ghostty --classic
+mkdir -p ~/.config/ghostty
+cp "$(dirname "$0")/.config/ghostty/config" ~/.config/ghostty/config
+
+sudo apt install -y rpi-imager

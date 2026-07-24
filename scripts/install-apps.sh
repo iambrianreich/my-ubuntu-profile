@@ -3,6 +3,8 @@
 # Installs additional applications and developer tools found on this machine
 # that aren't covered by the base packages in profile.sh.
 
+BITWARDEN_SERVER_URL="https://vault.ccglabs.net"
+
 # --- APT repositories ---
 
 if ! command -v google-chrome > /dev/null 2>&1; then
@@ -12,13 +14,22 @@ if ! command -v google-chrome > /dev/null 2>&1; then
     sudo apt install -y google-chrome-stable
 fi
 
-# Force-install Bitwarden extension for Chrome
+# Force-install Bitwarden extension for Chrome, pointed at our self-hosted server
 sudo mkdir -p /etc/opt/chrome/policies/managed
-sudo tee /etc/opt/chrome/policies/managed/bitwarden.json > /dev/null <<'EOF'
+sudo tee /etc/opt/chrome/policies/managed/bitwarden.json > /dev/null <<EOF
 {
     "ExtensionInstallForcelist": [
         "nngceckbapebfimnlniiiahkandclblb;https://clients2.google.com/service/update2/crx"
-    ]
+    ],
+    "3rdparty": {
+        "extensions": {
+            "nngceckbapebfimnlniiiahkandclblb": {
+                "environment": {
+                    "base": "${BITWARDEN_SERVER_URL}"
+                }
+            }
+        }
+    }
 }
 EOF
 
@@ -55,15 +66,24 @@ sudo apt install -y \
 sudo snap install docker
 sudo snap install firefox
 
-# Force-install Bitwarden extension for Firefox
+# Force-install Bitwarden extension for Firefox, pointed at our self-hosted server
 sudo mkdir -p /etc/firefox/policies
-sudo tee /etc/firefox/policies/policies.json > /dev/null <<'EOF'
+sudo tee /etc/firefox/policies/policies.json > /dev/null <<EOF
 {
     "policies": {
         "ExtensionSettings": {
             "{446900e4-71c2-419f-a6a7-df9c091e268b}": {
                 "install_url": "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi",
                 "installation_mode": "force_installed"
+            }
+        },
+        "3rdparty": {
+            "Extensions": {
+                "{446900e4-71c2-419f-a6a7-df9c091e268b}": {
+                    "environment": {
+                        "base": "${BITWARDEN_SERVER_URL}"
+                    }
+                }
             }
         }
     }

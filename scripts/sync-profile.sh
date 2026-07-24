@@ -48,7 +48,6 @@ fi
 echo "Syncing ${SOURCE_USER}@${SOURCE_SERVER}:~ -> ${DEST_HOME} (as ${DEST_USER})"
 
 sudo rsync -a --info=progress2 \
-    --rsync-path="sudo rsync" \
     -e ssh \
     "${SOURCE_USER}@${SOURCE_SERVER}:/home/${SOURCE_USER}/" \
     "${DEST_HOME}/"

@@ -72,6 +72,9 @@ sudo apt install -y rpi-imager
 # Install additional applications and developer tools
 sh "$(dirname "$0")/scripts/install-apps.sh"
 
+# Install and enable the SSH server, opened on the firewall
+sh "$(dirname "$0")/scripts/install-ssh-server.sh"
+
 # Optionally sync a user profile from another server
 printf "Sync a user profile from another server? [y/N] "
 read -r SYNC_PROFILE

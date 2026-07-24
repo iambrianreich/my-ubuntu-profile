@@ -125,7 +125,7 @@ if ! command -v signal-cli > /dev/null 2>&1; then
 fi
 
 if command -v npm > /dev/null 2>&1; then
-    sudo npm install -g opencode-ai @mariozechner/pi-coding-agent openclaw
+    sudo npm install -g @anthropic-ai/claude-code opencode-ai @mariozechner/pi-coding-agent openclaw
 fi
 
 if command -v pip3 > /dev/null 2>&1; then

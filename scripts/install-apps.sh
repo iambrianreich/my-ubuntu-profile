@@ -5,6 +5,11 @@
 
 BITWARDEN_SERVER_URL="https://vault.ccglabs.net"
 
+if ! command -v curl > /dev/null 2>&1; then
+    sudo apt update
+    sudo apt install -y curl
+fi
+
 # --- APT repositories ---
 
 curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --yes --dearmor -o /usr/share/keyrings/google-chrome.gpg
@@ -32,7 +37,9 @@ sudo tee /etc/opt/chrome/policies/managed/bitwarden.json > /dev/null <<EOF
 EOF
 
 if ! command -v signal-desktop > /dev/null 2>&1; then
-    curl -fsSL https://updates.signal.org/desktop/apt/keys.asc | sudo gpg --dearmor -o /usr/share/keyrings/signal-desktop-keyring.gpg
+    curl -fsSL https://updates.signal.org/desktop/apt/keys.asc -o /tmp/signal-desktop.asc
+    sudo gpg --dearmor -o /usr/share/keyrings/signal-desktop-keyring.gpg /tmp/signal-desktop.asc
+    rm -f /tmp/signal-desktop.asc
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main" | sudo tee /etc/apt/sources.list.d/signal-xenial.list > /dev/null
     sudo apt update
     sudo apt install -y signal-desktop
@@ -107,12 +114,14 @@ if ! command -v ollama > /dev/null 2>&1; then
     curl -fsSL https://ollama.com/install.sh | sh
 fi
 
-if ! command -v aws > /dev/null 2>&1; then
-    curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
-    unzip -o /tmp/awscliv2.zip -d /tmp
+curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
+unzip -o /tmp/awscliv2.zip -d /tmp
+if command -v aws > /dev/null 2>&1; then
+    sudo /tmp/aws/install --update
+else
     sudo /tmp/aws/install
-    rm -rf /tmp/awscliv2.zip /tmp/aws
 fi
+rm -rf /tmp/awscliv2.zip /tmp/aws
 
 if ! command -v signal-cli > /dev/null 2>&1; then
     SIGNAL_CLI_VERSION=$(curl -fsSL https://api.github.com/repos/AsamK/signal-cli/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')

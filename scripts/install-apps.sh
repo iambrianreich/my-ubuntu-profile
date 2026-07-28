@@ -64,7 +64,13 @@ sudo apt install -y \
     obs-studio \
     openjdk-11-jre \
     glabels \
-    alien
+    alien \
+    pcscd scdaemon \
+    yubikey-manager yubikey-personalization \
+    libpam-u2f libu2f-udev
+
+# YubiKey smart-card support (PIV/GPG) requires pcscd running
+sudo systemctl enable --now pcscd
 
 # --- Snaps ---
 

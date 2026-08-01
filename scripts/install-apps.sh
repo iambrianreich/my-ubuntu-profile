@@ -138,8 +138,13 @@ if ! command -v signal-cli > /dev/null 2>&1; then
     rm /tmp/signal-cli.tar.gz
 fi
 
+# No sudo: npm's prefix comes from the invoking user's ~/.npmrc. Running this
+# under sudo resets HOME to /root and silently installs to a different tree.
+# Claude Code is deliberately absent here -- it's installed natively to
+# ~/.local/bin, and the npm build would shadow it from earlier in PATH.
 if command -v npm > /dev/null 2>&1; then
-    sudo npm install -g @anthropic-ai/claude-code opencode-ai @mariozechner/pi-coding-agent openclaw
+    npm install -g opencode-ai @mariozechner/pi-coding-agent openclaw \
+        || echo "warning: global npm install failed" >&2
 fi
 
 if command -v pip3 > /dev/null 2>&1; then

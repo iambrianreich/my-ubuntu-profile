@@ -45,7 +45,8 @@ if ! command -v signal-desktop > /dev/null 2>&1; then
     sudo apt install -y signal-desktop
 fi
 
-if ! command -v node > /dev/null 2>&1; then
+# Node.js + npm from NodeSource (the nodejs package bundles npm)
+if ! command -v node > /dev/null 2>&1 || ! command -v npm > /dev/null 2>&1; then
     curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
     sudo apt install -y nodejs
 fi
@@ -67,7 +68,7 @@ sudo apt install -y \
     alien \
     pcscd scdaemon \
     yubikey-manager yubikey-personalization \
-    libpam-u2f libu2f-udev
+    libpam-u2f
 
 # YubiKey smart-card support (PIV/GPG) requires pcscd running
 sudo systemctl enable --now pcscd
